@@ -1,0 +1,12 @@
+/Users/gabrieltorres/Projects/teste_tecnico_fgv/backend/Sales.Domain/bin/Debug/net8.0/Sales.Domain.deps.json
+/Users/gabrieltorres/Projects/teste_tecnico_fgv/backend/Sales.Domain/bin/Debug/net8.0/Sales.Domain.dll
+/Users/gabrieltorres/Projects/teste_tecnico_fgv/backend/Sales.Domain/bin/Debug/net8.0/Sales.Domain.pdb
+/Users/gabrieltorres/Projects/teste_tecnico_fgv/backend/Sales.Domain/obj/Debug/net8.0/Sales.Domain.GeneratedMSBuildEditorConfig.editorconfig
+/Users/gabrieltorres/Projects/teste_tecnico_fgv/backend/Sales.Domain/obj/Debug/net8.0/Sales.Domain.AssemblyInfoInputs.cache
+/Users/gabrieltorres/Projects/teste_tecnico_fgv/backend/Sales.Domain/obj/Debug/net8.0/Sales.Domain.AssemblyInfo.cs
+/Users/gabrieltorres/Projects/teste_tecnico_fgv/backend/Sales.Domain/obj/Debug/net8.0/Sales.Domain.csproj.CoreCompileInputs.cache
+/Users/gabrieltorres/Projects/teste_tecnico_fgv/backend/Sales.Domain/obj/Debug/net8.0/Sales.Domain.sourcelink.json
+/Users/gabrieltorres/Projects/teste_tecnico_fgv/backend/Sales.Domain/obj/Debug/net8.0/Sales.Domain.dll
+/Users/gabrieltorres/Projects/teste_tecnico_fgv/backend/Sales.Domain/obj/Debug/net8.0/refint/Sales.Domain.dll
+/Users/gabrieltorres/Projects/teste_tecnico_fgv/backend/Sales.Domain/obj/Debug/net8.0/Sales.Domain.pdb
+/Users/gabrieltorres/Projects/teste_tecnico_fgv/backend/Sales.Domain/obj/Debug/net8.0/ref/Sales.Domain.dll
