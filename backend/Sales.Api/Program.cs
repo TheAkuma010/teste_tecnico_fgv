@@ -11,6 +11,8 @@ var connectionString =
     ?? throw new InvalidOperationException(
         "Connection string 'DefaultConnection' was not configured.");
 
+builder.Services.AddControllers();
+
 builder.Services.AddSingleton<IDbConnectionFactory>(
     new SqlConnectionFactory(connectionString));
 
