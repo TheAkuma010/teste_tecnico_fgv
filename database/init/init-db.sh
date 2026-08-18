@@ -11,6 +11,7 @@ until $SQLCMD \
     -U sa \
     -P "$MSSQL_SA_PASSWORD" \
     -No \
+    -b \
     -Q "SELECT 1" > /dev/null 2>&1
 do
     sleep 2
@@ -23,6 +24,7 @@ $SQLCMD \
     -U sa \
     -P "$MSSQL_SA_PASSWORD" \
     -No \
+    -b \
     -Q "IF DB_ID('SalesDb') IS NULL CREATE DATABASE SalesDb"
 
 echo "SalesDb criada/verificada."
@@ -32,6 +34,7 @@ $SQLCMD \
     -U sa \
     -P "$MSSQL_SA_PASSWORD" \
     -No \
+    -b \
     -d SalesDb \
     -i /scripts/001-create-tables.sql
 
@@ -42,6 +45,7 @@ $SQLCMD \
     -U sa \
     -P "$MSSQL_SA_PASSWORD" \
     -No \
+    -b \
     -d SalesDb \
     -i /scripts/002-seed.sql
 
