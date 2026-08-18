@@ -6,7 +6,7 @@ namespace Sales.Domain.Entities
         public int ProductId { get; private set; }
         public int Quantity { get; private set; } = 0;
         public decimal UnitPrice { get; private set; } = decimal.Zero;
-        public decimal TotalPrice => UnitPrice * Quantity;
+        public decimal Total => UnitPrice * Quantity;
 
         private OrderItem()
         { }
