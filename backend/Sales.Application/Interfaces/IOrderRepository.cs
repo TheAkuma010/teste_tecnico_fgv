@@ -15,12 +15,15 @@ public interface IOrderRepository
         CancellationToken cancellationToken = default);
 
     Task<int> CreateAsync(
-        Order order,
+        int clientId,
+        DateTime createdAt,
         CancellationToken cancellationToken = default);
 
     Task AddItemAsync(
         int orderId,
-        OrderItem item,
+        int productId,
+        int quantity,
+        decimal unitPrice,
         CancellationToken cancellationToken = default);
 
     Task UpdateItemAsync(
