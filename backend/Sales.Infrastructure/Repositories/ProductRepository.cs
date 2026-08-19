@@ -8,10 +8,12 @@ namespace Sales.Infrastructure.Repositories;
 public sealed class ProductRepository : IProductRepository
 {
     private readonly IDbConnectionFactory _connectionFactory;
+    private readonly DbTransactionContext _transactionContext;
 
-    public ProductRepository(IDbConnectionFactory connectionFactory)
+    public ProductRepository(IDbConnectionFactory connectionFactory, DbTransactionContext transactionContext)
     {
         _connectionFactory = connectionFactory;
+        _transactionContext = transactionContext;
     }
 
     public async Task<Product?> GetByIdAsync(

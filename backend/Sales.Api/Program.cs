@@ -16,11 +16,16 @@ builder.Services.AddControllers();
 builder.Services.AddSingleton<IDbConnectionFactory>(
     new SqlConnectionFactory(connectionString));
 
+builder.Services.AddScoped<DbTransactionContext>();
+
 builder.Services.AddScoped<IClientRepository, ClientRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 
+builder.Services.AddScoped<IUnitOfWork, SqlUnitOfWork>();
+
 builder.Services.AddScoped<IClientService, ClientService>();
 builder.Services.AddScoped<IProductService, ProductService>();
+
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

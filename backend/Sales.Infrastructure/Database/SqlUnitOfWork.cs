@@ -1,4 +1,3 @@
-using System.Data;
 using Microsoft.Data.SqlClient;
 using Sales.Application.Interfaces;
 
@@ -7,21 +6,24 @@ namespace Sales.Infrastructure.Database;
 public sealed class SqlUnitOfWork : IUnitOfWork
 {
     private readonly IDbConnectionFactory _connectionFactory;
-
-    private IDbConnection? _connection;
-    private IDbTransaction? _transaction;
+    private readonly DbTransactionContext _transactionContext;
 
     public IClientRepository Clients { get; }
+
     public IProductRepository Products { get; }
+
     public IOrderRepository Orders { get; }
 
     public SqlUnitOfWork(
         IDbConnectionFactory connectionFactory,
         IClientRepository clients,
         IProductRepository products,
-        IOrderRepository orders)
+        IOrderRepository orders,
+        DbTransactionContext transactionContext)
     {
         _connectionFactory = connectionFactory;
+        _transactionContext = transactionContext;
+
         Clients = clients;
         Products = products;
         Orders = orders;
@@ -30,24 +32,34 @@ public sealed class SqlUnitOfWork : IUnitOfWork
     public async Task BeginTransactionAsync(
         CancellationToken cancellationToken = default)
     {
-        _connection = _connectionFactory.CreateConnection();
+        if (_transactionContext.IsActive)
+        {
+            throw new InvalidOperationException(
+                "Já existe uma transação ativa.");
+        }
 
-        if (_connection is SqlConnection sqlConnection)
+        var connection = _connectionFactory.CreateConnection();
+
+        if (connection is SqlConnection sqlConnection)
         {
             await sqlConnection.OpenAsync(cancellationToken);
         }
         else
         {
-            _connection.Open();
+            connection.Open();
         }
 
-        _transaction = _connection.BeginTransaction();
+        var transaction = connection.BeginTransaction();
+
+        _transactionContext.Start(
+            connection,
+            transaction);
     }
 
     public Task CommitAsync(
         CancellationToken cancellationToken = default)
     {
-        _transaction?.Commit();
+        _transactionContext.Transaction.Commit();
 
         return Task.CompletedTask;
     }
@@ -55,15 +67,17 @@ public sealed class SqlUnitOfWork : IUnitOfWork
     public Task RollbackAsync(
         CancellationToken cancellationToken = default)
     {
-        _transaction?.Rollback();
+        if (_transactionContext.IsActive)
+        {
+            _transactionContext.Transaction.Rollback();
+        }
 
         return Task.CompletedTask;
     }
 
     public ValueTask DisposeAsync()
     {
-        _transaction?.Dispose();
-        _connection?.Dispose();
+        _transactionContext.Clear();
 
         return ValueTask.CompletedTask;
     }
