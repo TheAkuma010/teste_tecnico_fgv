@@ -4,6 +4,7 @@ namespace Sales.Domain.Entities
     {
         public int OrderId { get; private set; }
         public int ProductId { get; private set; }
+        public string ProductName { get; private set; } = string.Empty;
         public int Quantity { get; private set; } = 0;
         public decimal UnitPrice { get; private set; } = decimal.Zero;
         public decimal Total => UnitPrice * Quantity;
@@ -21,6 +22,11 @@ namespace Sales.Domain.Entities
         {
             Quantity = quantity;
             UnitPrice = unitPrice;
+        }
+
+        public void SetProductName(string productName)
+        {
+            ProductName = productName;
         }
     }
 }

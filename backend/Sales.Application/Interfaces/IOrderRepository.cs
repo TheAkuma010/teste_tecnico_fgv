@@ -8,6 +8,11 @@ public interface IOrderRepository
         int id,
         CancellationToken cancellationToken = default);
 
+    Task<OrderItem?> GetItemAsync(
+        int orderId,
+        int productId,
+        CancellationToken cancellationToken = default);
+
     Task<IReadOnlyCollection<Order>> GetAllAsync(
         int? clientId = null,
         DateTime? dateFrom = null,
@@ -36,5 +41,10 @@ public interface IOrderRepository
     Task RemoveItemAsync(
         int orderId,
         int productId,
+        CancellationToken cancellationToken = default);
+
+    Task UpdateTotalAsync(
+        int orderId,
+        decimal total,
         CancellationToken cancellationToken = default);
 }

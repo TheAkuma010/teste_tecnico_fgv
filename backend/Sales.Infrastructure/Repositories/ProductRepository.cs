@@ -30,13 +30,24 @@ public sealed class ProductRepository : IProductRepository
             WHERE CodProduto = @Id;
             """;
 
-        using var connection = _connectionFactory.CreateConnection();
+        var (connection, transaction, shouldDispose) = GetConnection();
 
-        return await connection.QuerySingleOrDefaultAsync<Product>(
-            new CommandDefinition(
-                sql,
-                new { Id = id },
-                cancellationToken: cancellationToken));
+        try
+        {
+            return await connection.QuerySingleOrDefaultAsync<Product>(
+                new CommandDefinition(
+                    sql,
+                    new { Id = id },
+                    transaction,
+                    cancellationToken: cancellationToken));
+        }
+        finally
+        {
+            if (shouldDispose)
+            {
+                connection.Dispose();
+            }
+        }
     }
 
     public async Task<IReadOnlyCollection<Product>> GetAllAsync(
@@ -52,14 +63,25 @@ public sealed class ProductRepository : IProductRepository
             ORDER BY Nome;
             """;
 
-        using var connection = _connectionFactory.CreateConnection();
+        var (connection, transaction, shouldDispose) = GetConnection();
 
-        var products = await connection.QueryAsync<Product>(
-            new CommandDefinition(
-                sql,
-                cancellationToken: cancellationToken));
+        try
+        {
+            var products = await connection.QueryAsync<Product>(
+                new CommandDefinition(
+                    sql,
+                    transaction: transaction,
+                    cancellationToken: cancellationToken));
 
-        return products.ToList();
+            return products.ToList();
+        }
+        finally
+        {
+            if (shouldDispose)
+            {
+                connection.Dispose();
+            }
+        }
     }
 
     public async Task<int> CreateAsync(
@@ -83,13 +105,24 @@ public sealed class ProductRepository : IProductRepository
             SELECT CAST(SCOPE_IDENTITY() AS INT);
             """;
 
-        using var connection = _connectionFactory.CreateConnection();
+        var (connection, transaction, shouldDispose) = GetConnection();
 
-        return await connection.ExecuteScalarAsync<int>(
-            new CommandDefinition(
-                sql,
-                product,
-                cancellationToken: cancellationToken));
+        try
+        {
+            return await connection.ExecuteScalarAsync<int>(
+                new CommandDefinition(
+                    sql,
+                    product,
+                    transaction,
+                    cancellationToken: cancellationToken));
+        }
+        finally
+        {
+            if (shouldDispose)
+            {
+                connection.Dispose();
+            }
+        }
     }
 
     public async Task UpdateAsync(
@@ -105,12 +138,39 @@ public sealed class ProductRepository : IProductRepository
             WHERE CodProduto = @Id;
             """;
 
-        using var connection = _connectionFactory.CreateConnection();
+        var (connection, transaction, shouldDispose) = GetConnection();
 
-        await connection.ExecuteAsync(
-            new CommandDefinition(
-                sql,
-                product,
-                cancellationToken: cancellationToken));
+        try
+        {
+            await connection.ExecuteAsync(
+                new CommandDefinition(
+                    sql,
+                    product,
+                    transaction,
+                    cancellationToken: cancellationToken));
+        }
+        finally
+        {
+            if (shouldDispose)
+            {
+                connection.Dispose();
+            }
+        }
+    }
+
+    private (System.Data.IDbConnection Connection, System.Data.IDbTransaction? Transaction, bool ShouldDispose) GetConnection()
+    {
+        if (_transactionContext.IsActive)
+        {
+            return (
+                _transactionContext.Connection,
+                _transactionContext.Transaction,
+                false);
+        }
+
+        return (
+            _connectionFactory.CreateConnection(),
+            null,
+            true);
     }
 }

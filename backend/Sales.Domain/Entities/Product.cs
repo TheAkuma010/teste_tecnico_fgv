@@ -23,5 +23,33 @@ namespace Sales.Domain.Entities
             Price = price;
             Stock = stock;
         }
+
+        public void DecreaseStock(int quantity)
+        {
+            if (quantity <= 0)
+            {
+                throw new ArgumentException(
+                    "A quantidade deve ser maior que zero.");
+            }
+
+            if (Stock < quantity)
+            {
+                throw new Domain.Exceptions.DomainException(
+                    $"Estoque insuficiente para o produto {Name}.");
+            }
+
+            Stock -= quantity;
+        }
+
+        public void IncreaseStock(int quantity)
+        {
+            if (quantity <= 0)
+            {
+                throw new ArgumentException(
+                    "A quantidade deve ser maior que zero.");
+            }
+
+            Stock += quantity;
+        }
     }
 }

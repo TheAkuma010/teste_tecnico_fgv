@@ -59,7 +59,14 @@ public sealed class SqlUnitOfWork : IUnitOfWork
     public Task CommitAsync(
         CancellationToken cancellationToken = default)
     {
-        _transactionContext.Transaction.Commit();
+        try
+        {
+            _transactionContext.Transaction.Commit();
+        }
+        finally
+        {
+            _transactionContext.Clear();
+        }
 
         return Task.CompletedTask;
     }
@@ -69,7 +76,14 @@ public sealed class SqlUnitOfWork : IUnitOfWork
     {
         if (_transactionContext.IsActive)
         {
-            _transactionContext.Transaction.Rollback();
+            try
+            {
+                _transactionContext.Transaction.Rollback();
+            }
+            finally
+            {
+                _transactionContext.Clear();
+            }
         }
 
         return Task.CompletedTask;
