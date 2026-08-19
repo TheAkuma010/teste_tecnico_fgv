@@ -12,6 +12,17 @@ var connectionString =
         "Connection string 'DefaultConnection' was not configured.");
 
 builder.Services.AddControllers();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(
+        "Frontend",
+        policy => policy
+            .WithOrigins(
+                "http://localhost:3000",
+                "http://frontend:3000")
+            .AllowAnyHeader()
+            .AllowAnyMethod());
+});
 
 builder.Services.AddSingleton<IDbConnectionFactory>(
     new SqlConnectionFactory(connectionString));
@@ -20,11 +31,13 @@ builder.Services.AddScoped<DbTransactionContext>();
 
 builder.Services.AddScoped<IClientRepository, ClientRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 
 builder.Services.AddScoped<IUnitOfWork, SqlUnitOfWork>();
 
 builder.Services.AddScoped<IClientService, ClientService>();
 builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<IOrderService, OrderService>();
 
 
 // Add services to the container.
@@ -42,7 +55,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
-app.UseHttpsRedirection();
+app.UseCors("Frontend");
 app.MapControllers();
 
 app.Run();
