@@ -131,8 +131,6 @@ GET /api/orders?clientId={id}&dateFrom={date}&dateTo={date}
 
 ---
 
----
-
 # Executando com Docker
 
 ## Pré-requisitos
