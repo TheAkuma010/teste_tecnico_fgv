@@ -1,9 +1,8 @@
 using System.Data;
 
-namespace Sales.Infrastructure.Database
+namespace Sales.Infrastructure.Database;
+
+public interface IDbConnectionFactory
 {
-    public interface IDbConnectionFactory
-    {
-        IDbConnection CreateConnection();
-    }
+    IDbConnection CreateConnection();
 }
