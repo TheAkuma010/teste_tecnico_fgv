@@ -9,7 +9,7 @@ COPY Sales.Infrastructure/Sales.Infrastructure.csproj Sales.Infrastructure/
 RUN dotnet restore Sales.sln
 
 COPY . .
-RUN dotnet publish Sales.Api/Sales.Api.csproj -c Release -o /app/publish --no-restore
+RUN dotnet publish Sales.Api/Sales.Api.csproj -c Release -o /app/publish
 
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
 WORKDIR /app
