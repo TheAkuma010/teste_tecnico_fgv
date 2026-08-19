@@ -33,5 +33,31 @@ services:
       - ./database/init/init-db.sh:/init-db.sh:ro
     entrypoint: ["/bin/bash", "/init-db.sh"]
 
+  api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: sales-api
+    depends_on:
+      db-init:
+        condition: service_completed_successfully
+    environment:
+      ASPNETCORE_URLS: "http://+:8080"
+      ConnectionStrings__DefaultConnection: "Server=sqlserver,1433;Database=SalesDb;User Id=sa;Password=Sales@123456Senha;TrustServerCertificate=True;Encrypt=False;"
+    ports:
+      - "5000:8080"
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: sales-frontend
+    depends_on:
+      - api
+    environment:
+      NEXT_PUBLIC_API_URL: "http://localhost:5000/api"
+    ports:
+      - "3000:3000"
+
 volumes:
   sqlserver_data:
